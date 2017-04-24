@@ -9,7 +9,7 @@
 
     if (!clientApplication)
     {
-        clientApplication = createApplication(window.config, onSignin);
+        clientApplication = createApplication(window.config);
         // ConfigureMSALLogger();
     }
 
@@ -20,17 +20,7 @@
     var $signOutButton = $(".app-logout");
     var $errorMessage = $(".app-error");
 
-    // Check For & Handle Redirect From AAD After Login
- //   var isCallback = clientApplication.isCallback(window.location.hash);
- //   clientApplication.handleWindowCallback();
- //   $errorMessage.html(clientApplication.getLoginError());
-
- //   if (isCallback && !clientApplication.getLoginError()) {
- //       window.location = clientApplication._getItem(clientApplication.CONSTANTS.STORAGE.LOGIN_REQUEST);
- //   }
-
  
-
     // Handle Navigation Directly to View
     window.onhashchange = function () {
         loadView(stripHash(window.location.hash));
@@ -41,18 +31,19 @@
 
     // Register NavBar Click Handlers
     $signOutButton.click(function () {
-        signOut();
-    });
-    $signInButton.click(function () {
-        signIn();
+        clientApplication.logout();
     });
 
-    function onSignin()
+    $signInButton.click(function () {
+        clientApplication.loginPopup().then(onSignin);
+    });
+
+    function onSignin(idToken)
     {
         // Check Login Status, Update UI
         var user = clientApplication.getUser();
         if (user) {
-            $userDisplay.html(user.profile.name);
+            $userDisplay.html(user.name);
             $userDisplay.show();
             $signInButton.hide();
             $signOutButton.show();

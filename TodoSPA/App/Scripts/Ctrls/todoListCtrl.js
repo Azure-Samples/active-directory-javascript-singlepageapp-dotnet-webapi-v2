@@ -2,30 +2,16 @@
 
     // The HTML for this View
     var viewHTML;
-
-    function ensureAuthenticationAndCallWebApi(action) {
-        // Try to acquire the access token silently
-        var scopes = [];
-        clientApplication.acquireTokenSilent(scopes, function (errorDescription, token, error) {
-            if (error) {
-                clientApplication.interactionMode = window.config.interactionMode;
-                clientApplication.acquireToken(scope, function (error, token) {
-                    if (token) {
-                        action(token);
-                    }
-                    if (error) {
-                        showError(endpoint, error, errorElement);
-                    }
-                });
-            } else {
-                action(token);
-            }
-        });
-    }
+    var scope = [""];
 
     function showError(endpoint, error, errorElement) {
         console.error(error);
         printErrorMessage("Error calling " + endpoint + ": " + JSON.stringify(error, null, 4));
+    }
+
+    function error(error)
+    {
+        printErrorMessage(error);
     }
 
     function refreshViewData() {
@@ -35,7 +21,7 @@
         $dataContainer.empty();
         var $loading = $(".view-loading");
 
-        ensureAuthenticationAndCallWebApi(function (token) {
+        getAccessToken(scope, function (token, error) {
             // Get TodoList Data
             $.ajax({
                 type: "GET",
@@ -67,7 +53,7 @@
                 // Register Handlers for Buttons in Data Table
                 registerDataClickHandlers();
             });
-        });
+        }, error);
     }
 
 
@@ -81,7 +67,7 @@
             var todoId = $(event.target).parents(".data-template").attr("data-todo-id");
 
             // Acquire Token for Backend
-            ensureAuthenticationAndCallWebApi(function (token) {
+            getAccessToken(scope, function (token, error) {
                 // Delete the Todo
                 $.ajax({
                     type: "DELETE",
@@ -97,7 +83,7 @@
                 }).always(function () {
                     refreshViewData();
                 });
-            });
+            }, error);
         });
 
 
@@ -138,7 +124,7 @@
             }
 
             // Acquire Token for Backend
-            ensureAuthenticationAndCallWebApi(function (token) {
+            getAccessToken(scope, function (token, error) {
                 // Update Todo Item
                 $.ajax({
                     type: "PUT",
@@ -159,7 +145,7 @@
                     refreshViewData();
                     $description.val('');
                 });
-            });
+            }, error);
         });
     };
 
@@ -177,7 +163,7 @@
             }
 
             // Acquire Token for Backend
-            ensureAuthenticationAndCallWebApi(function (token) {
+            getAccessToken(scope, function (token, error) {
                 // POST a New Todo
                 $.ajax({
                     type: "POST",
@@ -199,7 +185,7 @@
                     $description.val('');
                     refreshViewData();
                 });
-            });
+            }, error);
         });
     };
 

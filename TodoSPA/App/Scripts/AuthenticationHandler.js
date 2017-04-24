@@ -1,16 +1,17 @@
 ﻿// This configure verbose login for MSAL for diagnostic purposes
 function ConfigureMSALLogger() {
     // Set up a callback on the logger to log to the console
-    var logger = new MSAL.Logger(MSAL.Utils.CreateNewGuid());
+    var logger = new Msal.Logger(MSAL.Utils.CreateNewGuid());
     logger.level = MSAL.LogLevel.Verbose;
     logger.localCallback = console.log;
 }
 
+// ------------
 // Initialize MSAL libraries by setting the Client Id and a callback
 // @config - variable containing basic configuration, such as Client Id, interaction mode, and Redirect Url
-// @authCallback - callback function to be called after sign-in completes
+// @authCallback - callback function to be called after sign-in completes.
 function createApplication(config, authCallback) {
-    var userAgentApplication = new MSAL.UserAgentApplication(config.clientID, null, authCallback);
+    var userAgentApplication = new Msal.UserAgentApplication(config.clientID, null, authCallback);
     userAgentApplication.redirectUri = config.redirectUri;
     userAgentApplication.interactionMode = config.interactionMode;
 
@@ -22,15 +23,25 @@ function createApplication(config, authCallback) {
     return userAgentApplication;
 }
 
-//A simple cal to login method. 
-//If user is not signed-in, MSAL will redirect user to sign-in
-function signIn() {
-    clientApplication.login();
-}
+var clientApplication;
 
-//A simple cal to login method for UserAgentApplication
-function signOut() {
-    clientApplication.logout();
+// Get an access token for a given scope
+// @scope: permissions (for instance Microsoft Graph scope)
+// @callback: callback function to be called with the token, or otherwise, and error.
+function getAccessToken(scope, callback) {
+    clientApplication.acquireTokenSilent(scope, function callBackendApiCallback(errorDescription, token, error) {
+        if (error) {
+            clientApplication.acquireToken(scope, function (error, token) {
+                if (tnotepadoken) {
+                    callback(token, null);
+                }
+                if (error) {
+                    callback(null, error);
+                }
+            });
+        } else {
+            callback(token, errorDescription);
+        }
+    });
 }
-
 var clientApplication;
