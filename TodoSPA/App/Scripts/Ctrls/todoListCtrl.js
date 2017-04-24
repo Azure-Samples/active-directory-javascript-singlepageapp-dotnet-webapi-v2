@@ -2,7 +2,7 @@
 
     // The HTML for this View
     var viewHTML;
-    var scope = [""];
+    var scope = ["2730fe41-5ed4-446e-86cd-e58871ca001e"];
 
     function showError(endpoint, error, errorElement) {
         console.error(error);
@@ -21,7 +21,7 @@
         $dataContainer.empty();
         var $loading = $(".view-loading");
 
-        getAccessToken(scope, function (token, error) {
+        clientApplication.acquireTokenSilent(scope).then(function (token) {
             // Get TodoList Data
             $.ajax({
                 type: "GET",
@@ -53,7 +53,10 @@
                 // Register Handlers for Buttons in Data Table
                 registerDataClickHandlers();
             });
-        }, error);
+        }, function (error)
+        {
+            printErrorMessage(error);
+        });
     }
 
 
@@ -67,7 +70,7 @@
             var todoId = $(event.target).parents(".data-template").attr("data-todo-id");
 
             // Acquire Token for Backend
-            getAccessToken(scope, function (token, error) {
+            clientApplication.acquireTokenSilent(scope).then(function (token) {
                 // Delete the Todo
                 $.ajax({
                     type: "DELETE",
@@ -83,7 +86,9 @@
                 }).always(function () {
                     refreshViewData();
                 });
-            }, error);
+            }, function (error) {
+                printErrorMessage(error);
+            });
         });
 
 
@@ -124,7 +129,7 @@
             }
 
             // Acquire Token for Backend
-            getAccessToken(scope, function (token, error) {
+            clientApplication.acquireTokenSilent(scope).then(function (token) {
                 // Update Todo Item
                 $.ajax({
                     type: "PUT",
@@ -145,7 +150,9 @@
                     refreshViewData();
                     $description.val('');
                 });
-            }, error);
+            }, function (error) {
+                printErrorMessage(error);
+                });
         });
     };
 
@@ -163,7 +170,7 @@
             }
 
             // Acquire Token for Backend
-            getAccessToken(scope, function (token, error) {
+            clientApplication.acquireTokenSilent(scope).then(function (token) {
                 // POST a New Todo
                 $.ajax({
                     type: "POST",
@@ -185,7 +192,9 @@
                     $description.val('');
                     refreshViewData();
                 });
-            }, error);
+            }, function (error) {
+                printErrorMessage(error);
+            });
         });
     };
 

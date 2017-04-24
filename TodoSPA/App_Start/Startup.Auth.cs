@@ -10,6 +10,7 @@ namespace TodoSPA
 {
     public partial class Startup
     {
+        // To be updated https://github.com/Azure-Samples/active-directory-dotnet-webapp-webapi-openidconnect-aspnetcore
         public void ConfigureAuth(IAppBuilder app) {
 
             app.UseWindowsAzureActiveDirectoryBearerAuthentication(

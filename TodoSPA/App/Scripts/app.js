@@ -2,7 +2,7 @@
 (function () {
     // Enter Global Config Values & Instantiate MSAL Client application
     window.config = {
-        clientID: '[Enter your client Id here, e.g.b g075edef-0efa-453b-997b-de1337c29185]',
+        clientID: '2730fe41-5ed4-446e-86cd-e58871ca001e',
         redirectUri: window.location.origin,
         interactionMode: "popUp"
     };
