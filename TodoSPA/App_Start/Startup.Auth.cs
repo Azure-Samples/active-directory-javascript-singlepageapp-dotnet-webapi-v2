@@ -12,7 +12,6 @@ namespace TodoSPA
 {
     public partial class Startup
     {
-        // To be updated https://github.com/Azure-Samples/active-directory-dotnet-webapp-webapi-openidconnect-aspnetcore
         public void ConfigureAuth(IAppBuilder app)
         {
             var tvps = new TokenValidationParameters
@@ -24,7 +23,7 @@ namespace TodoSPA
 
                 ValidAudience = ConfigurationManager.AppSettings["ida:Audience"],
 
-                // In a real applicaiton, you might use issuer validation to
+                // In a real application, you might use issuer validation to
                 // verify that the user's organization (if applicable) has
                 // signed up for the app.  Here, we'll just turn it off.
 
@@ -35,10 +34,11 @@ namespace TodoSPA
             // The options provided here tell the middleware about the type of tokens
             // that will be recieved, which are JWTs for the v2.0 endpoint.
 
-            // NOTE: The usual WindowsAzureActiveDirectoryBearerAuthenticaitonMiddleware uses a
+            // NOTE: The usual WindowsAzureActiveDirectoryBearerAuthenticationMiddleware uses a
             // metadata endpoint which is not supported by the v2.0 endpoint.  Instead, this
-            // OpenIdConenctCachingSecurityTokenProvider can be used to fetch & use the OpenIdConnect
+            // OpenIdConnectCachingSecurityTokenProvider can be used to fetch & use the OpenIdConnect
             // metadata document.
+            // See https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-devquickstarts-dotnet-api
 
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions
             {

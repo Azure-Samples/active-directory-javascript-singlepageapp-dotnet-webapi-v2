@@ -1,11 +1,14 @@
 ﻿
 (function () {
+
     // Enter Global Config Values & Instantiate MSAL Client application
     window.config = {
         clientID: '2730fe41-5ed4-446e-86cd-e58871ca001e',
         redirectUri: window.location.origin,
         interactionMode: "popUp"
     };
+
+    
 
     if (!clientApplication)
     {
@@ -19,6 +22,7 @@
     var $signInButton = $(".app-login");
     var $signOutButton = $(".app-logout");
     var $errorMessage = $(".app-error");
+    onSignin(null);
 
  
     // Handle Navigation Directly to View
@@ -80,8 +84,7 @@
 
         // Check if View Requires Authentication
         if (ctrl.requireADLogin && !clientApplication.getUser()) {
-            clientApplication.config.redirectUri = window.location.href;
-            clientApplication.login();
+            clientApplication.loginPopup().then(onSignin);
             return;
         }
 

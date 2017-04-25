@@ -18,12 +18,8 @@ namespace TodoSPA.Controllers
         // GET: api/TodoList
         public IEnumerable<Todo> Get()
         {
-            //string owner = ClaimsPrincipal.Current.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //IEnumerable<Todo> currentUserToDos = db.Todoes.Where(a => a.Owner == owner);
-            //return currentUserToDos;
-            List<Todo> currentUserToDos = new List<Todo>();
-            currentUserToDos.Add(new Todo() { ID = 1, Description = "TodoItem1", Owner = "TestUser" });
-            currentUserToDos.Add(new Todo() { ID = 2, Description = "TodoItem2", Owner = "TestUser" });
+            string owner = ClaimsPrincipal.Current.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<Todo> currentUserToDos = db.Todoes.Where(a => a.Owner == owner);
             return currentUserToDos;
         }
 
