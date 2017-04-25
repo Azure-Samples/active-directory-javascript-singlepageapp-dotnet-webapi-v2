@@ -10,7 +10,7 @@ using TodoSPA.Models;
 
 namespace TodoSPA.Controllers
 {
-    // [Authorize]
+    [Authorize]
     public class TodoListController : ApiController
     {
         private TodoListServiceContext db = new TodoListServiceContext();
@@ -22,7 +22,7 @@ namespace TodoSPA.Controllers
             //IEnumerable<Todo> currentUserToDos = db.Todoes.Where(a => a.Owner == owner);
             //return currentUserToDos;
             List<Todo> currentUserToDos = new List<Todo>();
-            currentUserToDos.Add(new Todo(){ ID = 1, Description = "TodoItem1", Owner = "TestUser" });
+            currentUserToDos.Add(new Todo() { ID = 1, Description = "TodoItem1", Owner = "TestUser" });
             currentUserToDos.Add(new Todo() { ID = 2, Description = "TodoItem2", Owner = "TestUser" });
             return currentUserToDos;
         }
