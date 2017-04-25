@@ -2,7 +2,7 @@
 
     // The HTML for this View
     var viewHTML;
-    var scope = ["2730fe41-5ed4-446e-86cd-e58871ca001e"];
+    var scope = [window.config.clientID];
 
     function showError(endpoint, error, errorElement) {
         console.error(error);
