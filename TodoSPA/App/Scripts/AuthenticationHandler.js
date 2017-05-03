@@ -32,7 +32,7 @@ function getAccessToken(scope, callback) {
     clientApplication.acquireTokenSilent(scope, function callBackendApiCallback(errorDescription, token, error) {
         if (error) {
             clientApplication.acquireToken(scope, function (error, token) {
-                if (tnotepadoken) {
+                if (token) {
                     callback(token, null);
                 }
                 if (error) {

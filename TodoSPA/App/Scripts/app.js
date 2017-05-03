@@ -3,7 +3,7 @@
 
     // Enter Global Config Values & Instantiate MSAL Client application
     window.config = {
-        clientID: '2730fe41-5ed4-446e-86cd-e58871ca001e',
+        clientID: '[Add here the ClientID/ApplicationId of your application as copied from https://identity.microsoft.com] (same as in Web.Config)',
         redirectUri: window.location.origin,
         interactionMode: "popUp"
     };
