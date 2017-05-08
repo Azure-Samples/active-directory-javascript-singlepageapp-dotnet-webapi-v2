@@ -15,7 +15,6 @@ author: jmprieur
 * [Prerequisites](#prerequisites)
 * [Register the application](#register-the-application)
 * [Build and run the sample](#build-and-run-the-sample)
-* [Code of note](#code-of-note)
 * [Community Help and Support](#Community-Help-and-Support)
 * [Contributing](#contributing)
 
