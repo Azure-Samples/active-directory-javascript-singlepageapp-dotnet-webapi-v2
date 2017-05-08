@@ -11,7 +11,7 @@
         var $loading = $(".view-loading");
         var scope = [window.config.clientID];
 
-        var user = clientApplication.user;
+        var user = clientApplication.getUser();
         var $html = $(viewHTML);
         var $template = $html.find(".data-container");
         var output = '';
