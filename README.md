@@ -6,8 +6,8 @@ author: jmprieur
 
 # JavaScript Single Page Application with an ASP.NET backend, using msal.js
 
-| [Getting Started](https://apps.dev.microsoft.com/portal/register-app)| [Library](https://github.com/AzureAD/microsoft-authentication-library-for-js) | [Docs](https://aka.ms/aaddev) | [Support](README.md#community-help-and-support)
-| --- | --- | --- | --- |
+| [Getting Started](https://apps.dev.microsoft.com/portal/register-app)| [Library](https://github.com/AzureAD/microsoft-authentication-library-for-js) | [Docs](https://aka.ms/aaddev) | [Support](README.md#community-help-and-support) | [Protocol](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols-implicit) |
+| --- | --- | --- | --- | --- |
 
 ## Table of contents
 
@@ -43,7 +43,7 @@ To use this sample, you will need :
 	
    The registration page displays, listing the properties of your app.
 
-4. Copy the Application Id (also named ClientID). This is the unique identifier for your app. 
+4. Copy the Application Id (also named ClientID) to the clipboard. This is the unique identifier for your app. 
 
 5. Under **Platforms**, choose **Add Platform**.
 
@@ -56,27 +56,39 @@ To use this sample, you will need :
 
 ## Build and run the sample
 
-1. Download or clone thes sample.
+1. Download or clone the repository for this sample.
 
 2. Using your favorite IDE, open **app.js** in *App/scripts*.
 
-3. Replace the **clientId** placeholder value with the application ID of your registered Azure application.
+3. Replace the **clientId** GUID  with the application ID of your registered Azure application.
 
 4. open **Web.confg** in the root of the application.
 
 5. Replace the value of the  **Ida::Audience** application setting  with the application ID of your registered Azure application.
 
-6. Replace the value of the  **Ida::Tenant** application setting  with the name of the AAD tenant in which you have registered your application.
+6. Replace the value of the  **Ida::Tenant** application setting  with the name of the AAD tenant in which you have registered your application (the form should something.onmicrosoft.com)
   
-7. Run the application in Visual Studio
+7. Run the application in Visual Studio, for choose, from the toolback under the main menubar, which browser to use and use the Debug | *Start without debugging* command. The browser opens, navigating to `http://localhost:44302`.
 
-8. Navigate to `http://localhost:44302` in your web browser.
+9. When the page gets displayed, click on the **Login** button.
 
-9. Choose the **Connect** button.
+10. When the popup window appears, sign-in with your personal or work or school account and grant the requested permissions.
 
-10. Sign in with your personal or work or school account and grant the requested permissions.
+11. Click on User to see information about the Signed-in user, and TodoList to edit the todo list (you can add, delete, edit new items)
+ 
 
-11. Click on User to see information about the Signed-in user, and TodoList to edit the todo list.
+The sample was tested with Chrome, Edge and Internet Explorer. For Internet explorer, be sure to read the msal.js FAQ [Using msal.js with Internet Explorer](https://github.com/AzureAD/microsoft-authentication-library-for-js/wiki/Using-msal.js-with-Internet-Explorer)
+
+
+## About the code.
+- The creation of the user agent application is done in [app.js](https://github.com/Azure-Samples/active-directory-javascript-singlepageapp-dotnet-webapi-v2/blob/master/TodoSPA/App/Scripts/app.js#L23), configured by the clientID.
+
+- when the user presses the login button (sign-in happens, in [app.js](https://github.com/Azure-Samples/active-directory-javascript-singlepageapp-dotnet-webapi-v2/blob/master/TodoSPA/App/Scripts/app.js#L49) by a call to loginPopup().
+
+- when the user presses Todo, the list is fetched from the ASP.NET backend. this happens in [todoListCtrl.js](https://github.com/Azure-Samples/active-directory-javascript-singlepageapp-dotnet-webapi-v2/blob/master/TodoSPA/App/Scripts/Ctrls/todoListCtrl.js#L94), by attempting to call acquireTokenSilent, and then, if it fails calling acquireTokenPopup. The access token is then used to call the backend (which has the same clientID as the JavaScript front-end). This happens in [getTodoList](https://github.com/Azure-Samples/active-directory-javascript-singlepageapp-dotnet-webapi-v2/blob/master/TodoSPA/App/Scripts/Ctrls/todoListCtrl.js#L14).
+ 
+- when the user presses the logout button (sign-out happens, in [app.js](https://github.com/Azure-Samples/active-directory-javascript-singlepageapp-dotnet-webapi-v2/blob/master/TodoSPA/App/Scripts/app.js#L45) through a call to logout().
+
 
 
 ## Community Help and Support
