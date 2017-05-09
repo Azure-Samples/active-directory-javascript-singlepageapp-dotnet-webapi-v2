@@ -167,7 +167,6 @@
   <ItemGroup>
     <Content Include="App\Content\app.css" />
     <Content Include="App\Scripts\app.js" />
-    <Content Include="App\Scripts\AuthenticationHandler.js" />
     <Content Include="App\Scripts\Ctrls\homeCtrl.js" />
     <Content Include="App\Scripts\Ctrls\todoListCtrl.js" />
     <Content Include="App\Scripts\Ctrls\userDataCtrl.js" />
