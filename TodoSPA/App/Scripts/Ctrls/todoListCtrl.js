@@ -1,17 +1,86 @@
-﻿(function () {
-
+﻿ "use strict";
+(function () {
     // The HTML for this View
     var viewHTML;
     var scope = [window.config.clientID];
 
-    function showError(endpoint, error, errorElement) {
-        console.error(error);
-        printErrorMessage("Error calling " + endpoint + ": " + JSON.stringify(error, null, 4));
+    // Calls the TodoList Web API with an HTTP Bearer access request, and update data
+    function getTodoList(accessToken, dataContainer, loading) {
+        // Get TodoList Data
+        $.ajax({
+            type: "GET",
+            url: "/api/TodoList",
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+            },
+        }).done(function (data) {
+
+            var $html = $(viewHTML);
+            var $template = $html.find(".data-container");
+
+            // For Each Todo Item Returned, Append a Table Row
+            var output = data.reduce(function (rows, todoItem, index, todos) {
+                var $entry = $template;
+                var $description = $entry.find(".view-data-description").html(todoItem.Description);
+                $entry.find(".data-template").attr('data-todo-id', todoItem.ID);
+                return rows + $entry.html();
+            }, '');
+
+            // Update the UI
+            loading.hide();
+            dataContainer.html(output);
+
+        }).fail(function (jqXHR, textStatus) {
+            printErrorMessage('Error getting todo list data')
+        }).always(function () {
+
+            // Register Handlers for Buttons in Data Table
+            registerDataClickHandlers();
+        });
     }
 
-    function error(error)
-    {
-        printErrorMessage(error);
+
+    // Calls the TodoList Web API with an HTTP Bearer access request, and deletes a todo item
+    function deleteTodoItem(accessToken, todoId) {
+        // Delete the Todo
+        $.ajax({
+            type: "DELETE",
+            url: "/api/TodoList/" + todoId,
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+            },
+        }).done(function () {
+            console.log('DELETE success.');
+        }).fail(function () {
+            console.log('Fail on new Todo DELETE');
+            printErrorMessage('Error deleting todo item.')
+        }).always(function () {
+            refreshViewData();
+        });
+    }
+
+    // Calls the TodoList Web API with an HTTP Bearer acess request, and saves a todo item
+    function saveTodoItem(accessToken, todoId, description) {
+        // Update Todo Item
+        $.ajax({
+            type: "PUT",
+            url: "/api/TodoList",
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+            },
+            data: {
+                Description: description.val(),
+                ID: todoId,
+            },
+        }).done(function () {
+            console.log('PUT success.');
+        }).fail(function () {
+            console.log('Fail on todo PUT');
+            printErrorMessage('Error saving todo item.')
+        }).always(function () {
+            refreshViewData();
+            description.val('');
+        });
     }
 
     function refreshViewData() {
@@ -21,44 +90,19 @@
         $dataContainer.empty();
         var $loading = $(".view-loading");
 
-        clientApplication.acquireTokenSilent(scope).then(function (token) {
-            // Get TodoList Data
-            $.ajax({
-                type: "GET",
-                url: "/api/TodoList",
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                },
-            }).done(function (data) {
+        // Get the access token for the backend, and calls the Web API to refresh the todo list
+        clientApplication.acquireTokenSilent(scope)
+            .then(function (token) {
+                getTodoList(token, $dataContainer, $loading);
+            }, function (error) {
+                clientApplication.acquireTokenPopup(scope).then(function (token) {
+                    getTodoList(token, $dataContainer, $loading);
+                }, function (error) {
+                    printErrorMessage(error);
+                });
+            })
 
-                var $html = $(viewHTML);
-                var $template = $html.find(".data-container");
-
-                // For Each Todo Item Returned, Append a Table Row
-                var output = data.reduce(function (rows, todoItem, index, todos) {
-                    var $entry = $template;
-                    var $description = $entry.find(".view-data-description").html(todoItem.Description);
-                    $entry.find(".data-template").attr('data-todo-id', todoItem.ID);
-                    return rows + $entry.html();
-                }, '');
-
-                // Update the UI
-                $loading.hide();
-                $dataContainer.html(output);
-
-            }).fail(function (jqXHR, textStatus) {
-                printErrorMessage('Error getting todo list data')
-            }).always(function () {
-
-                // Register Handlers for Buttons in Data Table
-                registerDataClickHandlers();
-            });
-        }, function (error)
-        {
-            printErrorMessage(error);
-        });
     }
-
 
 
     function registerDataClickHandlers() {
@@ -69,28 +113,19 @@
 
             var todoId = $(event.target).parents(".data-template").attr("data-todo-id");
 
-            // Acquire Token for Backend
-            clientApplication.acquireTokenSilent(scope).then(function (token) {
-                // Delete the Todo
-                $.ajax({
-                    type: "DELETE",
-                    url: "/api/TodoList/" + todoId,
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                    },
-                }).done(function () {
-                    console.log('DELETE success.');
-                }).fail(function () {
-                    console.log('Fail on new Todo DELETE');
-                    printErrorMessage('Error deleting todo item.')
-                }).always(function () {
-                    refreshViewData();
-                });
-            }, function (error) {
-                printErrorMessage(error);
-            });
-        });
+            // Get the access token for the backend, and calls the Web API to delete the current item
+            clientApplication.acquireTokenSilent(scope)
+                .then(function (token) {
+                    deleteTodoItem(token, todoId);
+                }, function (error) {
+                    clientApplication.acquireTokenPopup(scope).then(function (token) {
+                        deleteTodoItem(token, todoId);
+                    }, function (error) {
+                        printErrorMessage(error);
+                    });
+                })
 
+        });
 
         // Edit Button(s)
         $(".view-data-edit").click(function (event) {
@@ -128,33 +163,44 @@
                 return;
             }
 
-            // Acquire Token for Backend
-            clientApplication.acquireTokenSilent(scope).then(function (token) {
-                // Update Todo Item
-                $.ajax({
-                    type: "PUT",
-                    url: "/api/TodoList",
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                    },
-                    data: {
-                        Description: $description.val(),
-                        ID: todoId,
-                    },
-                }).done(function () {
-                    console.log('PUT success.');
-                }).fail(function () {
-                    console.log('Fail on todo PUT');
-                    printErrorMessage('Error saving todo item.')
-                }).always(function () {
-                    refreshViewData();
-                    $description.val('');
-                });
-            }, function (error) {
-                printErrorMessage(error);
-                });
+            // Get the access token for the backend, and calls the Web API to save the current item
+            clientApplication.acquireTokenSilent(scope)
+                .then(function (token) {
+                    saveTodoItem(token, todoId, $description);
+                }, function (error) {
+                    clientApplication.acquireTokenPopup(scope).then(function (token) {
+                        deleteTodoItem(token, todoId, $description);
+                    }, function (error) {
+                        printErrorMessage(error);
+                    });
+                })
+
         });
     };
+
+    function postNewTodo(accesstoken, description) {
+        // POST a New Todo
+        $.ajax({
+            type: "POST",
+            url: "/api/TodoList",
+            headers: {
+                'Authorization': 'Bearer ' + accesstoken,
+            },
+            data: {
+                Description: description.val(),
+            },
+        }).done(function () {
+            console.log('POST success.');
+        }).fail(function () {
+            console.log('Fail on new Todo POST');
+            printErrorMessage('Error adding new todo item.');
+        }).always(function () {
+
+            // Refresh TodoList
+            description.val('');
+            refreshViewData();
+        });
+    }
 
     function registerViewClickHandlers() {
 
@@ -169,32 +215,17 @@
                 return;
             }
 
-            // Acquire Token for Backend
-            clientApplication.acquireTokenSilent(scope).then(function (token) {
-                // POST a New Todo
-                $.ajax({
-                    type: "POST",
-                    url: "/api/TodoList",
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                    },
-                    data: {
-                        Description: $description.val(),
-                    },
-                }).done(function () {
-                    console.log('POST success.');
-                }).fail(function () {
-                    console.log('Fail on new Todo POST');
-                    printErrorMessage('Error adding new todo item.');
-                }).always(function () {
+            clientApplication.acquireTokenSilent(scope)
+                .then(function (token) {
+                    postNewTodo(token, $description);
+                }, function (error) {
+                    clientApplication.acquireTokenPopup(scope).then(function (token) {
+                        deleteTodoItem(token, $description);
+                    }, function (error) {
+                        printErrorMessage(error);
+                    });
+                })
 
-                    // Refresh TodoList
-                    $description.val('');
-                    refreshViewData();
-                });
-            }, function (error) {
-                printErrorMessage(error);
-            });
         });
     };
 

@@ -1,19 +1,26 @@
-﻿
+﻿// the AAD application
+var clientApplication;
+
 (function () {
 
     // Enter Global Config Values & Instantiate MSAL Client application
     window.config = {
         clientID: '2730fe41-5ed4-446e-86cd-e58871ca001e',
-        redirectUri: window.location.origin,
-        interactionMode: "popUp"
     };
 
-    
+    function authCallback(errorDesc, token, error, tokenType) {
+        //This function is called after loginRedirect and acquireTokenRedirect. Not called with loginPopup
+        // msal object is bound to the window object after the constructor is called.
+        if (token) {
+        }
+        else {
+            log(error + ":" + errorDesc);
+        }
+    }
 
     if (!clientApplication)
     {
-        clientApplication = createApplication(window.config);
-        // ConfigureMSALLogger();
+        clientApplication = new Msal.UserAgentApplication(window.config.clientID, null, authCallback);
     }
 
     // Get UI jQuery Objects
@@ -59,7 +66,6 @@
         }
 
     }
-
 
     // Route View Requests To Appropriate Controller
     function loadCtrl(view) {
