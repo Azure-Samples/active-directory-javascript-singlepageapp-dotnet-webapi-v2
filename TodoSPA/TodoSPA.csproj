@@ -170,7 +170,6 @@
     <Content Include="App\Scripts\Ctrls\homeCtrl.js" />
     <Content Include="App\Scripts\Ctrls\todoListCtrl.js" />
     <Content Include="App\Scripts\Ctrls\userDataCtrl.js" />
-    <Content Include="App\Scripts\Msal.js" />
     <Content Include="App\Views\Home.html" />
     <Content Include="App\Views\TodoList.html" />
     <Content Include="App\Views\UserData.html" />
