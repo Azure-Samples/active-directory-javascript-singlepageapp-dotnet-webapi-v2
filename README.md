@@ -37,44 +37,42 @@ To use this sample, you will need :
 
 1. Sign into the [App Registration Portal](https://apps.dev.microsoft.com/) using either your personal or work or school account.
 
-2. Choose **Add an app**.
+1. Choose **Add an app**.
 
-3. Enter a name for the app, and choose **Create application**. 
+1. Enter a name for the app, and choose **Create application**. 
 	
    The registration page displays, listing the properties of your app.
 
-4. Copy the Application Id (also named ClientID) to the clipboard. This is the unique identifier for your app. 
+1. Copy the Application Id (also named ClientID) to the clipboard. This is the unique identifier for your app. 
 
-5. Under **Platforms**, choose **Add Platform**.
+1. Under **Platforms**, choose **Add Platform**.
 
-6. Choose **Web**.
+1. Choose **Web**.
 
-7. Make sure the **Allow Implicit Flow** check box is selected, and enter *https://localhost:44302/* as the Redirect URI. 
+1. Make sure the **Allow Implicit Flow** check box is selected, and enter *https://localhost:44302/* as the Redirect URI. 
 
-8. Choose **Save**.
+1. Choose **Save**.
 
 
 ## Build and run the sample
 
 1. Download or clone the repository for this sample.
 
-2. Using your favorite IDE, open **app.js** in *App/scripts*.
+1. Using your favorite IDE, open **app.js** in *App/scripts*.
 
-3. Replace the **clientId** GUID  with the application ID of your registered Azure application.
+1. Replace the **clientId** GUID  with the application ID of your registered Azure application that you pasted in the clipboard.
 
-4. open **Web.confg** in the root of the application.
+1. open **Web.config** in the root of the application.
 
-5. Replace the value of the  **Ida::Audience** application setting  with the application ID of your registered Azure application.
-
-6. Replace the value of the  **Ida::Tenant** application setting  with the name of the AAD tenant in which you have registered your application (the form should something.onmicrosoft.com)
+1. Replace the value of the  **Ida::Audience** application setting with the application ID of your registered Azure application (same GUID that you pasted to the clipboard). Note that **Ida::Tenant** is not currently set in the **Web.config** as all AAD V2 web APIs are currently multi-tenant.
   
-7. Run the application in Visual Studio, for choose, from the toolback under the main menubar, which browser to use and use the Debug | *Start without debugging* command. The browser opens, navigating to `http://localhost:44302`.
+1. Run the application in Visual Studio, for choose, from the toolback under the main menubar, which browser to use and use the Debug | *Start without debugging* command. The browser opens, navigating to `http://localhost:44302`.
 
-9. When the page gets displayed, click on the **Login** button.
+1. When the page gets displayed, click on the **Login** button.
 
-10. When the popup window appears, sign-in with your personal or work or school account and grant the requested permissions.
+1. When the popup window appears, sign-in with your personal or work or school account and grant the requested permissions.
 
-11. Click on User to see information about the Signed-in user, and TodoList to edit the todo list (you can add, delete, edit new items)
+1. Click on User to see information about the Signed-in user, and TodoList to edit the todo list (you can add, delete, edit new items)
  
 
 The sample was tested with Chrome, Edge and Internet Explorer. For Internet explorer, be sure to read the msal.js FAQ [Using msal.js with Internet Explorer](https://github.com/AzureAD/microsoft-authentication-library-for-js/wiki/Using-msal.js-with-Internet-Explorer)
