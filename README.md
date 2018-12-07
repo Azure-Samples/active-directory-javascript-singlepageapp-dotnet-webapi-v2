@@ -43,7 +43,7 @@ To use this sample, you will need :
 
 1. When the **Register an application** page appears, enter a name for your application.
 
-1. Under **Supported Microsoft accounts**, select **Accounts in any organizational directory and personal Microsoft accounts**.
+1. Under **Supported account types**, select **Accounts in any organizational directory and personal Microsoft accounts (e.g. Skype, Xbox, Outlook.com)**.
 
 1. Select the **Web** platform under the **Redirect URI** section and set the value to `https://localhost:44302/`.
 
