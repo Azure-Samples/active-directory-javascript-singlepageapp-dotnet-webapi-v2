@@ -39,7 +39,9 @@ To use this sample, you will need :
 
 1. If your account gives you access to more than one tenant, select your account in the top right corner, and set your portal session to the desired Azure AD tenant.
 
-1. In the left-hand navigation pane, select the **Azure Active Directory** service, and then select **App registrations (Preview) > New registration**.
+1.  From the left hand navigation pane, choose **Azure Active Directory**.
+
+1. Click on **[App registrations](https://go.microsoft.com/fwlink/?linkid=2083908)** and choose **New registration**.
 
 1. When the **Register an application** page appears, enter a name for your application.
 
