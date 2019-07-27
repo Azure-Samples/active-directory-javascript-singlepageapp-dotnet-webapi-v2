@@ -32,10 +32,10 @@ namespace TodoSPA
 
             // Set up the OWIN pipeline to use OAuth 2.0 Bearer authentication.
             // The options provided here tell the middleware about the type of tokens
-            // that will be recieved, which are JWTs for the v2.0 endpoint.
+            // that will be recieved, which are JWTs for the Microsoft identity platfom endpoint.
 
             // NOTE: The usual WindowsAzureActiveDirectoryBearerAuthenticationMiddleware uses a
-            // metadata endpoint which is not supported by the v2.0 endpoint.  Instead, this
+            // metadata endpoint which is not supported by the identity platfom endpoint.  Instead, this
             // OpenIdConnectCachingSecurityTokenProvider can be used to fetch & use the OpenIdConnect
             // metadata document.
             // See https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-devquickstarts-dotnet-api
