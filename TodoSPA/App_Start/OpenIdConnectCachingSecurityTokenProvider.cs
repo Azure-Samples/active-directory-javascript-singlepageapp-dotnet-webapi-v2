@@ -1,4 +1,6 @@
 ﻿using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Owin.Security.Jwt;
 using System;
 using System.Collections.Generic;
@@ -6,15 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.IdentityModel.Tokens;
 
 namespace TodoSPA
 {
-    public class OpenIdConnectCachingSecurityTokenProvider : IIssuerSecurityTokenProvider
+    public class OpenIdConnectCachingSecurityTokenProvider : IIssuerSecurityKeyProvider
     {
         public ConfigurationManager<OpenIdConnectConfiguration> _configManager;
         private string _issuer;
-        private IEnumerable<SecurityToken> _tokens;
+        private IEnumerable<SecurityKey> _keys;
         private readonly string _metadataEndpoint;
 
         private readonly ReaderWriterLockSlim _synclock = new ReaderWriterLockSlim();
@@ -22,7 +23,7 @@ namespace TodoSPA
         public OpenIdConnectCachingSecurityTokenProvider(string metadataEndpoint)
         {
             _metadataEndpoint = metadataEndpoint;
-            _configManager = new ConfigurationManager<OpenIdConnectConfiguration>(metadataEndpoint);
+            _configManager = new ConfigurationManager<OpenIdConnectConfiguration>(metadataEndpoint, new OpenIdConnectConfigurationRetriever());
 
             RetrieveMetadata();
         }
@@ -51,12 +52,12 @@ namespace TodoSPA
         }
 
         /// <summary>
-        /// Gets all known security tokens.
+        /// Gets all known security keys.
         /// </summary>
         /// <value>
-        /// All known security tokens.
+        /// All known security keys.
         /// </value>
-        public IEnumerable<SecurityToken> SecurityTokens
+        public IEnumerable<SecurityKey> SecurityKeys
         {
             get
             {
@@ -64,7 +65,7 @@ namespace TodoSPA
                 _synclock.EnterReadLock();
                 try
                 {
-                    return _tokens;
+                    return _keys;
                 }
                 finally
                 {
@@ -78,9 +79,9 @@ namespace TodoSPA
             _synclock.EnterWriteLock();
             try
             {
-                OpenIdConnectConfiguration config = _configManager.GetConfigurationAsync().Result;
+                OpenIdConnectConfiguration config = Task.Run(_configManager.GetConfigurationAsync).Result;
                 _issuer = config.Issuer;
-                _tokens = config.SigningTokens;
+                _keys = config.SigningKeys;
             }
             finally
             {

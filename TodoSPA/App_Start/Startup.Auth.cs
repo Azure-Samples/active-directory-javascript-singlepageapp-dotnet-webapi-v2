@@ -1,4 +1,6 @@
-﻿using Microsoft.Owin.Security.ActiveDirectory;
+﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.Owin.Security.ActiveDirectory;
+using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using System;
@@ -32,17 +34,17 @@ namespace TodoSPA
 
             // Set up the OWIN pipeline to use OAuth 2.0 Bearer authentication.
             // The options provided here tell the middleware about the type of tokens
-            // that will be recieved, which are JWTs for the Microsoft identity platfom endpoint.
+            // that will be received, which are JWTs for the Microsoft identity platform endpoint.
 
             // NOTE: The usual WindowsAzureActiveDirectoryBearerAuthenticationMiddleware uses a
-            // metadata endpoint which is not supported by the identity platfom endpoint.  Instead, this
+            // metadata endpoint which is not supported by the identity platform endpoint.  Instead, this
             // OpenIdConnectCachingSecurityTokenProvider can be used to fetch & use the OpenIdConnect
             // metadata document.
             // See https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-devquickstarts-dotnet-api
 
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions
             {
-                AccessTokenFormat = new Microsoft.Owin.Security.Jwt.JwtFormat(tvps, new OpenIdConnectCachingSecurityTokenProvider("https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration")),
+                AccessTokenFormat = new JwtFormat(tvps, new OpenIdConnectCachingSecurityTokenProvider("https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration")),
             });
         }
     }
