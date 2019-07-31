@@ -2,6 +2,15 @@
 services: active-directory
 platforms: dotnet (backend), JavaScript (frontend)
 author: jmprieur
+page_type: sample
+languages:
+  - javascript  
+products:
+  - azure
+  - azure-active-directory  
+  - aspnet
+  - office-ms-graph
+description: "Demonstrates how a JavaScript single-page app with an ASP.NET backend gets a token and calls a web API using MSAL.JS."
 ---
 
 # JavaScript Single Page Application with an ASP.NET backend, using msal.js
@@ -67,7 +76,7 @@ To use this sample, you will need :
 
 1. open **Web.config** in the root of the application.
 
-1. Replace the value of the  **Ida::Audience** application setting with the application ID of your registered Azure application (same GUID that you pasted to the clipboard). Note that **Ida::Tenant** is not currently set in the **Web.config** as all AAD V2 web APIs are currently multi-tenant.
+1. Replace the value of the  **Ida::Audience** application setting with the application ID of your registered Azure application (same GUID that you pasted to the clipboard). Note that **Ida::Tenant** is not currently set in the **Web.config** as all Microsoft identity platform web APIs are currently multi-tenant.
 
 1. Run the application in Visual Studio, for choose, from the toolback under the main menubar, which browser to use and use the Debug | *Start without debugging* command. The browser opens, navigating to `http://localhost:44302`.
 
