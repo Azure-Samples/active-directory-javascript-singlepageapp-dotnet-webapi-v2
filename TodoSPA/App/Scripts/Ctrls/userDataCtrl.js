@@ -9,9 +9,8 @@
         var $dataContainer = $(".data-container");
         $dataContainer.empty();
         var $loading = $(".view-loading");
-        var scope = [window.config.clientID];
-
-        var user = clientApplication.getUser();
+       
+        var user = clientApplication.getAccount();
         var $html = $(viewHTML);
         var $template = $html.find(".data-container");
         var output = '';

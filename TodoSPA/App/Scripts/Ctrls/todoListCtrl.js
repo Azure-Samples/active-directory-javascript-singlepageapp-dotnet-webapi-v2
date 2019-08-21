@@ -2,7 +2,9 @@
 (function () {
     // The HTML for this View
     var viewHTML;
-    var scope = [window.config.clientID];
+    var scope = {
+        scopes: [window.msalConfig.auth.clientId]
+    };
 
     // Calls the TodoList Web API with an HTTP Bearer access request, and update data
     function getTodoList(accessToken, dataContainer, loading) {
@@ -11,7 +13,7 @@
             type: "GET",
             url: "/api/TodoList",
             headers: {
-                'Authorization': 'Bearer ' + accessToken,
+                'Authorization': 'Bearer ' + accessToken.accessToken
             },
         }).done(function (data) {
 
@@ -47,7 +49,7 @@
             type: "DELETE",
             url: "/api/TodoList/" + todoId,
             headers: {
-                'Authorization': 'Bearer ' + accessToken,
+                'Authorization': 'Bearer ' + accessToken.accessToken
             },
         }).done(function () {
             console.log('DELETE success.');
@@ -66,7 +68,7 @@
             type: "PUT",
             url: "/api/TodoList",
             headers: {
-                'Authorization': 'Bearer ' + accessToken,
+                'Authorization': 'Bearer ' + accessToken.accessToken
             },
             data: {
                 Description: description.val(),
