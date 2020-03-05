@@ -142,9 +142,9 @@
         // Cancel Button(s)
         $(".view-data-cancel-edit").click(function (event) {
             clearErrorMessage();
-            $entry = $(event.target).parents(".data-template");
+            var $entry = $(event.target).parents(".data-template");
             $entry.find(".view-data-description").show();
-            $editInput = $entry.find(".view-data-edit-input").hide();
+            var $editInput = $entry.find(".view-data-edit-input").hide();
             $editInput.val('');
             $entry.find(".view-data-mode-delete").show();
             $entry.find(".view-data-mode-edit").hide();
