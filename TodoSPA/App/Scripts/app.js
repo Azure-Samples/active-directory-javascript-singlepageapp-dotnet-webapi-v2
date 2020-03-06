@@ -4,23 +4,25 @@ var clientApplication;
 (function () {
 
     // Enter Global Config Values & Instantiate MSAL Client application
-    window.config = {
-        clientID: '2730fe41-5ed4-446e-86cd-e58871ca001e',
+    window.msalConfig = {
+        auth: {
+            clientId: '82406733-be31-4501-bfe5-bca74fc60075'
+        }
     };
-
-    function authCallback(errorDesc, token, error, tokenType) {
-        //This function is called after loginRedirect and acquireTokenRedirect. Not called with loginPopup
-        // msal object is bound to the window object after the constructor is called.
-        if (token) {
-        }
-        else {
-            log(error + ":" + errorDesc);
-        }
-    }
 
     if (!clientApplication)
     {
-        clientApplication = new Msal.UserAgentApplication(window.config.clientID, null, authCallback);
+        clientApplication = new Msal.UserAgentApplication(window.msalConfig);
+        clientApplication.handleRedirectCallback(function (errorDesc, token, error, tokenType) {
+            //This function is called after loginRedirect and acquireTokenRedirect. Not called with loginPopup
+            // msal object is bound to the window object after the constructor is called.
+            if (token) {
+                // token found
+            }
+            else {
+                log(error + ":" + errorDesc);
+            }
+        });
     }
 
     // Get UI jQuery Objects
@@ -52,7 +54,7 @@ var clientApplication;
     function onSignin(idToken)
     {
         // Check Login Status, Update UI
-        var user = clientApplication.getUser();
+        var user = clientApplication.getAccount();
         if (user) {
             $userDisplay.html(user.name);
             $userDisplay.show();
@@ -89,7 +91,7 @@ var clientApplication;
             return;
 
         // Check if View Requires Authentication
-        if (ctrl.requireADLogin && !clientApplication.getUser()) {
+        if (ctrl.requireADLogin && !clientApplication.getAccount()) {
             clientApplication.loginPopup().then(onSignin);
             return;
         }

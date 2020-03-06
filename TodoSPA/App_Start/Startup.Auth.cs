@@ -16,6 +16,7 @@ namespace TodoSPA
     {
         public void ConfigureAuth(IAppBuilder app)
         {
+            var clientId = ConfigurationManager.AppSettings["ida:Audience"];
             var tvps = new TokenValidationParameters
             {
                 // In this app, the TodoListClient and TodoListService
@@ -23,7 +24,7 @@ namespace TodoSPA
                 // the Application Id to represent the audience, or the
                 // intended recipient of tokens.
 
-                ValidAudience = ConfigurationManager.AppSettings["ida:Audience"],
+                ValidAudiences = new[] { clientId, $"api://{clientId}" },
 
                 // In a real application, you might use issuer validation to
                 // verify that the user's organization (if applicable) has
@@ -44,7 +45,7 @@ namespace TodoSPA
 
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions
             {
-                AccessTokenFormat = new JwtFormat(tvps, new OpenIdConnectCachingSecurityTokenProvider("https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration")),
+                AccessTokenFormat = new JwtFormat(tvps, new OpenIdConnectSecurityKeyProvider("https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration")),
             });
         }
     }
