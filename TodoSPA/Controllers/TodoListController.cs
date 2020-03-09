@@ -13,7 +13,7 @@ namespace TodoSPA.Controllers
     [Authorize]
     public class TodoListController : ApiController
     {
-        private TodoListServiceContext db = new TodoListServiceContext();
+        private readonly TodoListServiceContext db = new TodoListServiceContext();
 
         // GET: api/TodoList
         public IEnumerable<Todo> Get()
